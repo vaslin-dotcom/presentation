@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Special Birthday Surprise</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; background-color: #f8e1e8; overflow: hidden; }
+        #photo { width: 300px; height: auto; margin-top: 20px; border-radius: 15px; box-shadow: 0 4px 8px rgba(0,0,0,0.2); transition: opacity 0.5s ease; }
+        #message { font-size: 1.5em; color: #e63946; margin-top: 20px; transition: opacity 0.5s ease; }
+        #song { margin-top: 20px; }
+        #nextButton { padding: 10px 20px; background-color: #e63946; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        #nextButton:hover { background-color: #d62839; }
+        #finalMessage { display: none; font-size: 2em; color: #2a9d8f; margin-top: 20px; }
+        #confetti { position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 999; display: none; }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.4.0/dist/confetti.browser.min.js"></script>
+</head>
+<body>
+    <h1>💌 Happy Birthday Treasure Hunt 💌</h1>
+    <canvas id="confetti"></canvas>
+    <img id="photo" src="" alt="Memory" hidden>
+    <p id="message"></p>
+    <audio id="song" controls hidden>
+        <source src="" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+    <button id="nextButton">Next</button>
+    <p id="finalMessage">You’re the best thing that ever happened to me! Happy Birthday! 🎉</p>
+
+    <script>
+        const stages = [
+            { photo: "1.jpg", message: "The day we first met 💖", song: "_Kannukoru_Vannakili_ringtone_(Fringster.com).mp3"},
+            { photo: "2.jpg", message: "One of my favorite memories with you ❤️", song: "Tum Saath Ho Tamil Version Download.mp3" },
+            { photo: "3.jpg", message: "A moment I’ll never forget 🥰", song: "Remo Birthday Bgm Mp3 Download.mp3" },
+            { photo: "4.jpg", message: "Here’s to many more beautiful memories 🌹", song: "_Venmegam_Pennaga_Tamil_Song_ringtone_(Fringster.com).mp3" },
+        ];
+
+        let currentStage = 0;
+
+        function loadStage(stage) {
+            const photoEl = document.getElementById("photo");
+            const messageEl = document.getElementById("message");
+            const songEl = document.getElementById("song");
+            const finalMessageEl = document.getElementById("finalMessage");
+
+            // Fade out elements
+            photoEl.style.opacity = 0;
+            messageEl.style.opacity = 0;
+
+            setTimeout(() => {
+                // Load and display photo if available
+                if (stage.photo) {
+                    photoEl.src = stage.photo;
+                    photoEl.hidden = false;
+                } else {
+                    photoEl.hidden = true;
+                }
+
+                // Display message
+                if (stage.message) {
+                    messageEl.textContent = stage.message;
+                }
+
+                // Play song if available
+                if (stage.song) {
+                    songEl.src = stage.song;
+                    songEl.hidden = false;
+                    songEl.play();
+                } else {
+                    songEl.hidden = true;
+                    songEl.pause();
+                }
+
+                // Fade in elements
+                photoEl.style.opacity = 1;
+                messageEl.style.opacity = 1;
+            }, 500); // Timing to match CSS transition
+
+            // Show final message if last stage
+            if (currentStage === stages.length) {
+                photoEl.hidden = true;
+                finalMessageEl.style.display = "block";
+                showConfetti();
+            }
+        }
+
+        function showConfetti() {
+            const canvas = document.getElementById('confetti');
+            const myConfetti = confetti.create(canvas, {
+                resize: true,
+                useWorker: true
+            });
+            myConfetti({
+                particleCount: 100,
+                spread: 160,
+                origin: { y: 0.6 }
+            });
+        }
+
+        document.getElementById("nextButton").onclick = function() {
+            if (currentStage < stages.length) {
+                loadStage(stages[currentStage]);
+                currentStage++;
+            } else {
+                loadStage({});
+            }
+        };
+
+    </script>
+</body>
+</html>
